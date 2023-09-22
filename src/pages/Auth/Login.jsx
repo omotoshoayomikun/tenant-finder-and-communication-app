@@ -1,24 +1,80 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native"
+import React, { useState, useEffect, useContext } from 'react'
+import { View, Text, StyleSheet, Image, ScrollView, Pressable, Alert } from "react-native"
 import { Input } from "../../components/Forms/Input"
 import GlobalStyle from "../../utils/GlobalStyle"
-import { BackBtn, Btn } from "../../components/Forms/Btn"
-const { White, mb_20, mt_10, flex1, mt_50, textRight, red, headerText, textCenter, relative, px, flex_row, TextPurple } = GlobalStyle;
+import { Btn } from "../../components/Forms/Btn"
+import { Links } from '../../utils/url'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
+import { UserType } from '../../userContext'
+const { White, mb_20, flex1, mt_50, red, headerText, textCenter, relative, px, flex_row, TextPurple } = GlobalStyle;
 
 function Login({ navigation }) {
-
-
+    const [loading, setLoading] = useState(false)
+    const [userId, setUserId] = useState('')
+    const [secure, setSecure] = useState(true)
+    const { } = useContext(UserType)
     const [value, setValue] = useState({
         email: '',
         password: '',
     })
 
+    const Inputs = [
+        {
+            id: 1,
+            name: 'email',
+            placeholder: 'Email',
+        },
+        {
+            id: 2,
+            name: 'password',
+            placeholder: 'Password',
+        },
+    ]
+
+    // useEffect(() => {
+    //     const checkLoginStatus = async() => {
+    //         try {
+    //             const token = await AsyncStorage.getItem('authToken')
+    //             if (token) {
+    //                 navigation.replace('LayoutTabScreen')
+    //             } else {
+
+    //             }
+    //         } catch (err) {
+    //             console.log(err)
+    //         }
+    //     }
+
+    //     checkLoginStatus()
+    // }, [])
+
     const onChangeText = (e, name) => {
-        setValue({...value, [name]: e})
+        setValue({ ...value, [name]: e.trim()})
     }
 
+    const handleEyeclose = () => {
+        setSecure(!secure)
+    }
+    
     const handleLogin = () => {
-        navigation.navigate('LayoutTabScreen')
+        setLoading(true)
+
+         axios.post(`${Links.baseUrl}/login`, value).then((response) => {
+            const token = response.data.token;
+
+            AsyncStorage.setItem("authToken", token);
+
+            setLoading(false)
+            navigation.navigate('LayoutTabScreen')
+        }).catch((err) => {
+            setLoading(false)
+            Alert.alert('Error', `${err.message}`, [
+                { text: 'OK' }
+            ])
+        })
+
+        // navigation.navigate('LayoutTabScreen')
     }
 
     return (
@@ -30,16 +86,19 @@ function Login({ navigation }) {
             <View style={[flex1, px, styles.box_login]}>
                 <Text style={[headerText, textCenter, mb_20]}>Login</Text>
                 <Input placeholder='Email' name='email' onChangeText={onChangeText} />
-                <Input placeholder='Password' name='password' secure={true} onChangeText={onChangeText} />
-                <View>
-                    <Text style={[styles.txt_forget, textRight]} onPress={() => navigation.navigate('ForgetPass')}>Forget Password ?</Text>
-                </View>
+                <Input placeholder='Password' name='password' secure={secure} onChangeText={onChangeText} handleEyeclose={handleEyeclose} />
                 <View style={[mt_50]}>
-                    <Btn text='Login' handlePress={handleLogin} />
+                    <Btn text='Login' handlePress={handleLogin} loading={loading} />
                 </View>
-                <View style={[flex_row, mt_10, { justifyContent: 'center' }]}>
+                <View style={[flex_row, { justifyContent: 'center', marginTop: 20, }]}>
                     <Text style={[styles.txt_acc]}>Don't have an account? </Text>
-                    <Text style={[styles.txt_acc2, TextPurple]} onPress={() => navigation.navigate('Register')}> Sign Up</Text>
+                    <Pressable
+                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                        onPress={() => navigation.navigate('Register')}
+
+                    >
+                        <Text style={[styles.txt_acc2, TextPurple]} >Sign Up</Text>
+                    </Pressable>
                 </View>
             </View>
         </ScrollView>
@@ -73,7 +132,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 250,
         objectFit: 'cover',
-        backgroundColor: 'red'
     },
     box_login: {
         backgroundColor: White,

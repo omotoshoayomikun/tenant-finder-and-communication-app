@@ -7,58 +7,68 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GlobalStyle from '../../utils/GlobalStyle';
-
+import Swiper from 'react-native-swiper';
 const { flex_row, flex1, justify_between, Roboto, item_center, ml_10, mb_10, mt_10, mt_20, Raleway, gap10, relative, absolute } = GlobalStyle
 
-export const Card = ({ handleShow }) => {
-
+export const Card = (props) => {
+    
     return (
         <View style={styles.card}>
             <View style={[flex_row, styles.card_hed]}>
-                <Image source={require('../../../assets/imgs/welcome1.jpg')} style={styles.card_avater} />
+                {
+                    props.item.userId?.images[0]?.uri ? (
+                        <Image source={{ uri: props.item.userId.images[0].uri }} style={styles.card_avater} />
+
+                    ) : (
+                        <Image source={require('../../../assets/imgs/profile.png')} style={styles.card_avater} />
+                    )
+                }
                 <View style={[ml_10,]}>
-                    <Text style={[Roboto, { fontSize: 15, fontWeight: '600' }]}>Omotosho Ayomikun</Text>
-                    <Text style={[Raleway, { fontSize: 12, fontStyle: 'italic' }]}>Lagos</Text>
+                    <Text style={[{ fontSize: 15, fontWeight: '600' }]}>{props.item.userId.firstName} {props.item.userId.lastName}</Text>
+                    <Text style={[Raleway, { fontSize: 12, fontStyle: 'italic', marginTop: -4 }]}>{props.item.userId.state} State</Text>
                 </View>
             </View>
-            <View>
-                <Image source={require('../../../assets/imgs/welcome1.jpg')} style={styles.card_image} />
-            </View>
+            <Swiper style={[styles.wrapper, { height: 170 }]}>
+                {props.item.images.map((image, index) => (
+                    <View key={index} style={styles.slide}>
+                        <Image source={image} style={styles.card_image} />
+                    </View>
+                ))}
+            </Swiper>
             <View style={[flex_row, justify_between, mb_10, mt_10, item_center]}>
-                {/* <Text style={[Raleway, { fontSize: 17 }]}>Modern Apartment</Text> */}
-                <Text style={[Raleway, { fontSize: 17 }]}>₦100,000</Text>
+                <Text style={[Raleway, { fontSize: 17 }]}>₦{props.item.price}</Text>
                 <FontAwesome name='bookmark-o' size={17} />
             </View>
             <View style={[flex_row, justify_between, mt_10]}>
                 <View style={[styles.bor_righ, flex1]}>
                     <View style={[flex_row]}>
-                        <Text style={[{ fontSize: 20 }]}>3</Text>
+                        <Text style={[{ fontSize: 17 }]}>{props.item.bedroom}</Text>
                         <Ionicons name='bed-outline' size={25} />
                     </View>
                     <Text style={[Raleway, { fontSize: 12 }]}>Bedrooms</Text>
                 </View>
                 <View style={[styles.bor_righ, flex1, { alignItems: 'center' }]}>
                     <View style={[flex_row]}>
-                        <Text style={[{ fontSize: 20 }]}>3</Text>
+                        <Text style={[{ fontSize: 17 }]}>{props.item.toilet}</Text>
                         <MaterialCommunityIcons name='toilet' size={25} />
                     </View>
                     <Text style={[Raleway, { fontSize: 12 }]}>Toilet</Text>
                 </View>
                 <View style={[flex1, { alignItems: 'flex-end' }]}>
                     <View style={[flex_row]}>
-                        <Text style={[{ fontSize: 20 }]}>3</Text>
-                        <MaterialIcons name='window' size={25} />
+                        <Text style={[{ fontSize: 17 }]}>{props.item.square}</Text>
+                        <MaterialCommunityIcons name='vector-square' size={25} />
                     </View>
-                    <Text style={[Raleway, { fontSize: 12 }]}>Windows</Text>
+                    <Text style={[Raleway, { fontSize: 12 }]}>Square Ft</Text>
                 </View>
             </View>
             <View style={[flex_row, mt_10]}>
                 <Ionicons name='location-outline' size={20} />
-                <Text style={[Raleway, { fontSize: 12 }]}>Ibeju Lekki phase one off </Text>
+                <Text style={[Raleway, { fontSize: 12 }]}>{props.item.location} {props.item.state}</Text>
             </View>
             <View style={[flex_row, gap10, mt_20, mb_10]}>
                 <TouchableOpacity
-                    onPress={handleShow}
+                    onPress={() => props.handleShow(props.item._id)}
                     style={styles.btn_view}
                 >
                     <Text style={[Raleway, { fontSize: 15 }]}>View Details</Text>
@@ -74,9 +84,10 @@ export const Card = ({ handleShow }) => {
 
 export const BoxCard = (props) => {
 
+
     return (
-        <Pressable key={props.i} style={[styles.border_box, relative]} onPress={props.handlePressed}>
-            <Image source={require('../../../assets/imgs/welcome1.jpg')} style={styles.box_img} />
+        <Pressable key={props.i} style={[styles.border_box, relative]} onPress={() => props.handlePressed(props._id)}>
+            <Image source={props.images[0]} style={styles.box_img} />
             <View style={styles.vic_icon}>
                 <Text>
                     <Ionicons name='images' size={20} />
@@ -109,9 +120,13 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 50,
     },
-    card_image: {
+    slide: {
         width: '100%',
         height: 150,
+    },
+    card_image: {
+        width: '100%',
+        height: 170,
         marginTop: 15,
         borderTopLeftRadius: 7,
         borderTopRightRadius: 7,
@@ -133,7 +148,7 @@ const styles = StyleSheet.create({
         // borderColor: '#d1d5db'
     },
     border_box: {
-        width: '32%',
+        width: '32.87%',
         height: 100,
     },
     box_img: {

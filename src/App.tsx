@@ -1,28 +1,16 @@
+import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useState } from 'react';
 import {
-  SafeAreaView,
   StyleSheet
 } from 'react-native';
 import Landing from './pages/Landing';
 import Login from './pages/Auth/Login';
-import PersonalQues from './pages/Auth/Register/PersonalQues';
-import ForgetPass from './pages/Auth/ForgetPass';
-import NextOfKinQues from './pages/Auth/Register/NextOfKinQues';
-import PasswordSet from './pages/Auth/Register/PasswordSet';
-import Dashboard from './pages/Home';
-import Session from './pages/Chat';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from './pages/Profile';
-import Setting from './pages/Setting';
-import Entypo from 'react-native-vector-icons/Entypo';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import GlobalStyle from './utils/GlobalStyle';
 import Register from './pages/Auth/Register/Register';
 import Home from './pages/Home';
 import Chat from './pages/Chat';
@@ -30,12 +18,41 @@ import EditProfile from './components/Profile/EditProfile';
 import AddHouseToRent from './components/Profile/AddHouseToRent';
 import EditHouseToRent from './components/Profile/EditHouseToRent';
 import ChatMessages from './components/Chat/ChatMessages';
+import { UserContext } from './userContext';
+import HouseDetails from './pages/HouseDetails';
+// import { Camera } from 'react-native-vision-camera'
 
 
 function App(): JSX.Element {
 
+  // useEffect(() => {
+  //   async function getPermission() {
+  //     const cameraPermission = await Camera.getCameraPermissionStatus()
+  //     const microphonePermission = await Camera.getMicrophonePermissionStatus()
+
+  //     const CameraPermissionRequest = await Camera.requestCameraPermission()
+  //     const MicrophonePermissionRequest = await Camera.requestMicrophonePermission()
+
+  //     console.log(cameraPermission)
+  //     console.log(microphonePermission)
+
+
+  //     if (cameraPermission === 'denied') await Linking.openSettings();
+  //     if (microphonePermission === 'denied') await Linking.openSettings();
+
+
+  //     if (CameraPermissionRequest === 'denied') await Linking.openSettings();
+  //     if (MicrophonePermissionRequest === 'denied') await Linking.openSettings();
+
+  //     console.log(CameraPermissionRequest)
+  //     console.log(MicrophonePermissionRequest)
+
+  //   }
+
+  //   getPermission()
+  // }, [])
+
   const Stack = createStackNavigator();
-  const { Purple } = GlobalStyle
 
   const LoginStackScreen = () => {
     return (
@@ -44,7 +61,7 @@ function App(): JSX.Element {
           { headerShown: false }
         }
       >
-        {/* <Stack.Screen name='Landing' component={Landing} /> */}
+        <Stack.Screen name='Landing' component={Landing} />
         <Stack.Screen name='Login' component={Login} />
         <Stack.Screen name='Register' component={Register} />
 
@@ -55,10 +72,10 @@ function App(): JSX.Element {
   const ProfileStackScreen = () => {
     return (
       <Stack.Navigator>
-        <Stack.Screen name='Profile' options={{headerShown: false}} component={Profile} />
-        <Stack.Screen name='EditProfile' component={EditProfile} />
-        <Stack.Screen name='AddHouseToRent' component={AddHouseToRent} />
-        <Stack.Screen name='EditHouseToRent' component={EditHouseToRent} />
+        <Stack.Screen name='Profile' options={{ headerShown: false }} component={Profile} />
+        <Stack.Screen name='EditProfile' options={{headerTitle: 'Edit Profile'}} component={EditProfile} />
+        <Stack.Screen name='AddHouseToRent' options={{headerTitle: 'Add House'}} component={AddHouseToRent} />
+        <Stack.Screen name='EditHouseToRent' options={{headerTitle: 'House'}} component={EditHouseToRent} />
       </Stack.Navigator>
     )
   }
@@ -67,7 +84,16 @@ function App(): JSX.Element {
     return (
       <Stack.Navigator>
         <Stack.Screen name='Chat' component={Chat} />
-        <Stack.Screen name='ChatMessages' component={ChatMessages} />
+        <Stack.Screen name='ChatMessages'  options={{headerTitle: 'Messages'}}  component={ChatMessages} />
+      </Stack.Navigator>
+    )
+  }
+
+  const HomeStackScreen = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name='Home' options={{headerShown: false}} component={Home} />
+        <Stack.Screen name='HouseDetails' options={{headerTitle: 'House Detail'}} component={HouseDetails} />
       </Stack.Navigator>
     )
   }
@@ -82,8 +108,8 @@ function App(): JSX.Element {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-           
-             if (route.name === 'Home') {
+
+            if (route.name === 'HomeStackScreen') {
               return (
 
                 <Ionicons size={25} name={focused ? 'home' : 'home-outline'} />
@@ -93,7 +119,7 @@ function App(): JSX.Element {
               return (
                 <FontAwesome name={focused ? 'user' : 'user-o'} size={25} />
               )
-            } 
+            }
             else if (route.name === 'ChatStackScreen') {
               return (
                 <Ionicons size={25} name={focused ? 'chatbox' : 'chatbox-outline'} />
@@ -111,30 +137,32 @@ function App(): JSX.Element {
         })}
       >
         {/* <Tab.Screen name='Session' component={Session} /> */}
-        <Tab.Screen name='Home' component={Home} />
-        <Tab.Screen name='ProfileStackScreen' options={{tabBarLabel: 'Profile'}} component={ProfileStackScreen} />
-        <Tab.Screen name='ChatStackScreen' options={{tabBarLabel: 'Chats'}} component={ChatStackScreen} />
+        <Tab.Screen name='HomeStackScreen' options={{tabBarLabel: 'Home'}} component={HomeStackScreen} />
+        <Tab.Screen name='ProfileStackScreen' options={{ tabBarLabel: 'Profile' }} component={ProfileStackScreen} />
+        <Tab.Screen name='ChatStackScreen' options={{ tabBarLabel: 'Chats' }} component={ChatStackScreen} />
       </Tab.Navigator>
     )
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={
-          { header: () => null }
-        }
-      >
-        <Stack.Screen
-          name='LoginStackScreen'
-          component={LoginStackScreen}
-        />
-        <Stack.Screen
-          name='LayoutTabScreen'
-          component={LayoutTabScreen}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserContext>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={
+            { header: () => null }
+          }
+        >
+          <Stack.Screen
+            name='LoginStackScreen'
+            component={LoginStackScreen}
+          />
+          <Stack.Screen
+            name='LayoutTabScreen'
+            component={LayoutTabScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserContext>
   );
 }
 

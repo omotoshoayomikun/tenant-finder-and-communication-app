@@ -1,101 +1,42 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import GlobalStyle from '../../utils/GlobalStyle'
 import { BoxCard, Card } from '../Forms/Card'
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { Links } from '../../utils/url';
+import { UserType } from '../../userContext';
 
+const { flex_row, justify_between, absolute, justify_center, item_center } = GlobalStyle
 export default function ListOfHouseToRent() {
-
     const navigation = useNavigation()
+    const { userId } = useContext(UserType)
+    const [house, setHouse ] = useState([])
 
-    const { flex_row, justify_between, absolute, justify_center, item_center } = GlobalStyle
+    useEffect(() => {
+        const fetchListOfHouse = async () => {
+            try {
+                const response = await axios.get(`${Links.baseUrl}/listofhousetoresnt/${userId}`)
+                setHouse(response.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        fetchListOfHouse()
+    })
 
-    const data = [
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-
-    ]
-
-    const handlePressed = () => {
-        navigation.navigate('EditHouseToRent')
+    const handlePressed = (houseId) => {
+        navigation.navigate('EditHouseToRent', {
+            houseId
+        })
     }
 
     return (
         <View>
-            <View style={[flex_row, justify_between, { flexWrap: 'wrap', gap: 5 }]}>
+            <View style={[flex_row, { flexWrap: 'wrap', gap: 2 }]}>
                 {
-                    data.map((item, i) => (
-                        <BoxCard key={i} handlePressed={handlePressed} />
+                    house.map((item, i) => (
+                        <BoxCard key={i} {...item} handlePressed={handlePressed} />
                     ))
                 }
             </View>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -8,37 +8,64 @@ import GlobalStyle from '../utils/GlobalStyle'
 import { BoxCard } from '../components/Forms/Card'
 import ListOfHouseToRent from '../components/Profile/ListOfHouseToRent';
 import Bookmark from '../components/Profile/Bookmark';
+import axios from 'axios';
+import { Links } from '../utils/url';
+import { UserType } from '../userContext';
 
+const { container, flex1, Roboto, Raleway, flex_row, ml_10, gap10, mt_20, mb_30, mt_10, mb_10, justify_center, item_center, absolute } = GlobalStyle
 function Profile({ navigation }) {
-  const { container, flex1, Roboto, Raleway, flex_row, ml_10, gap10, mt_20, mb_30, mt_10, mb_10, justify_center, item_center, absolute } = GlobalStyle
-
+  const { userId } = useContext(UserType)
+  const [pageLoading, setPageLoading] = useState(true)
   const [showPages, setShowPages] = useState('list')
+  const [ user, setUser] = useState({})
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`${Links.baseUrl}/user/${userId}`)
+        setUser(response.data)
+        setPageLoading(false)
+      } catch (err) {
+        console.log(err)
+      }
+
+    }
+    fetchUser()
+  }, [navigation])
+
+  
+  if(pageLoading) {
+    return (
+        <View></View>
+    )
+}
 
   return (
     <View style={[flex1]}>
       <ScrollView>
         <View style={[{ padding: 12 }]}>
           <View style={[flex_row, styles.card_hed, gap10]}>
-            <Image source={require('../../assets/imgs/welcome1.jpg')} style={[styles.card_avater, ml_10]} />
+            <Image source={user?.images[0]?.uri ? {uri: user.images[0].uri} : require('../../assets/imgs/profile.png')} style={[styles.card_avater, ml_10]} />
           </View>
           <View style={[]}>
-            <Text style={[{ fontSize: 16, fontWeight: '600', color: '#0f172a' }]}>Omotosho Ayomikun</Text>
+            <Text style={[{ fontSize: 16, fontWeight: '600', color: '#0f172a' }]}>{user.firstName} {user.lastName}</Text>
             <View style={[flex_row, { width: '90%' }]}>
               <Ionicons name='phone-portrait-outline' size={20} />
               <Text ellipsizeMode="tail" numberOfLines={1} style={[{ fontSize: 13, fontWeight: '400', overflow: 'hidden' }]}>
-                09054544641
+                {user.phone}
               </Text>
             </View>
             <View style={[flex_row, { width: '90%' }]}>
               <Ionicons name='mail' size={20} />
               <Text ellipsizeMode="tail" numberOfLines={1} style={[{ fontSize: 13, fontWeight: '400', overflow: 'hidden' }]}>
-                Omotoshoayomikun@gmail.com
+                {user.email}
               </Text>
             </View>
             <View style={[flex_row, mb_10, { width: '90%' }]}>
               <Ionicons name='location-outline' size={20} />
               <Text ellipsizeMode="tail" numberOfLines={1} style={[{ fontSize: 13, fontWeight: '400', overflow: 'hidden' }]}>
-                Opposite mafarosere compound offa Kwara State
+                {user.address} {user.state}
               </Text>
             </View>
           </View>
@@ -57,15 +84,17 @@ function Profile({ navigation }) {
 
         <View>
           <View style={[flex_row]}>
-            <Pressable style={[flex1, item_center, styles.nav_header, { borderBottomWidth: showPages === 'list' ? 1.5 : 0 }]} 
-            onPress={() => setShowPages('list')}
+            <Pressable style={[flex1, item_center, styles.nav_header, { borderBottomWidth: showPages === 'list' ? 1.5 : 0 }]}
+              onPress={() => setShowPages('list')}
             >
               <FontAwesome6 name='list-ul' size={22} />
+              <Text style={[{ fontSize: 7 }]}>List of house</Text>
             </Pressable>
-            <Pressable style={[flex1, item_center, styles.nav_header, { borderBottomWidth: showPages === 'bookmark' ? 1.5 : 0 }]} 
-            onPress={() => setShowPages('bookmark')}
+            <Pressable style={[flex1, item_center, styles.nav_header, { borderBottomWidth: showPages === 'bookmark' ? 1.5 : 0 }]}
+              onPress={() => setShowPages('bookmark')}
             >
               <FontAwesome name='bookmark-o' size={22} />
+              <Text style={[{ fontSize: 7 }]}>Bookmarks</Text>
             </Pressable>
           </View>
         </View>

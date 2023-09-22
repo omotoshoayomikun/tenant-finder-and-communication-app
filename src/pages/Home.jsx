@@ -1,99 +1,73 @@
-import React, { useState } from 'react'
-import { StyleSheet, ScrollView, Image, Text, View, FlatList, Modal } from 'react-native'
+import React, { useState, useEffect, useContext } from 'react'
+import { StyleSheet, Alert, View, FlatList, Modal } from 'react-native'
 import GlobalStyle from '../utils/GlobalStyle'
 import { Card } from '../components/Forms/Card'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import HouseDetails from './HouseDetails'
+// import HouseDetails from './HouseDetails'
+import { UserType } from '../userContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import jwtDecode from 'jwt-decode'
+import axios from 'axios'
+import { Links } from '../utils/url'
 
-function Home() {
+function Home({ navigation }) {
+
+    const { userId, setUserId } = useContext(UserType)
+    const [pageLoading, setPageLoading] = useState(true)
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+        const fetchToken = async () => {
+            const token = await AsyncStorage.getItem("authToken")
+            const decodeToken = jwtDecode(token);
+            const userId = decodeToken.userId
+            setUserId(userId)
+        }
+        fetchToken()
+    }, [])
+
+    useEffect(() => {
+        const fetchHouses = async () => {
+            try {
+                const response = await axios.get(`${Links.baseUrl}/housetorent`)
+                setData(response.data)
+                setPageLoading(false)
+            } catch (err) {
+                console.log(err)
+            }
+
+        }
+        fetchHouses()
+    }, [navigation])
+
 
     const [showDetails, setShowDetails] = useState(false)
 
 
-    const data = [
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-    ]
 
     const { flex1, relative, headerText, White, mb_20, padding_20, justify_between, fz16, mr_10, flex_row, mb_10 } = GlobalStyle
 
-    const handleHouseDetail = () => {
-        setShowDetails(true)
+    const handleHouseDetail = (houseId) => {
+        navigation.navigate('HouseDetails', {houseId})
+        // setShowDetails(true)
+    }
+
+    if(pageLoading) {
+        return (
+            <View></View>
+        )
     }
 
     return (
-        <View style={[flex1, { }]}>
+        <View style={[flex1, {}]}>
             <FlatList
-                // numColumns={2}
-                // columnWrapperStyle={styles.cvd}
                 data={data}
                 renderItem={(item) => (
-                    <Card handleShow={handleHouseDetail} />
+                    <Card {...item} handleShow={handleHouseDetail} />
                 )}
                 keyExtractor={(item, i) => i}
             />
-            <Modal
-                transparent
-                visible={showDetails}
-                onRequestClose={() => setShowDetails(false)}
-            >
-                <HouseDetails />
-            </Modal>
         </View>
     )
 }

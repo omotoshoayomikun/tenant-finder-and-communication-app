@@ -3,14 +3,14 @@ import { View, Text } from 'react-native'
 import GlobalStyle from "../../utils/GlobalStyle"
 import { BackBtn } from '../../components/Forms/Btn'
 
-function ForgetPass({ navigation }) {
+function ForgetPass() {
     const { container } = GlobalStyle
 
     return (
         <View style={[container]}>
-            <View>
+            {/* <View>
                 <BackBtn handlePress={() => navigation.goBack()} />
-            </View>
+            </View> */}
             <Text>Forget Password</Text>
         </View>
     )

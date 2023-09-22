@@ -10,7 +10,7 @@ export default function Bookmark() {
     const data = [
         {
             price: '200',
-            image: '',
+            image: require('../../../assets/imgs/sitting1.jpg'),
             avatar: '',
             name: '',
             bedroom: '',
@@ -18,7 +18,7 @@ export default function Bookmark() {
         },
         {
             price: '200',
-            image: '',
+            image: require('../../../assets/imgs/sitting2.jpg'),
             avatar: '',
             name: '',
             bedroom: '',
@@ -26,55 +26,7 @@ export default function Bookmark() {
         },
         {
             price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
-            avatar: '',
-            name: '',
-            bedroom: '',
-            bath: ''
-        },
-        {
-            price: '200',
-            image: '',
+            image:  require('../../../assets/imgs/sitting3.jpg'),
             avatar: '',
             name: '',
             bedroom: '',
@@ -85,10 +37,10 @@ export default function Bookmark() {
 
     return (
         <View>
-            <View style={[flex_row, justify_between, { flexWrap: 'wrap', gap: 5 }]}>
+            <View style={[flex_row, justify_between, { flexWrap: 'wrap', gap: 2 }]}>
                 {
                     data.map((item, i) => (
-                        <BoxCard key={i} />
+                        <BoxCard key={i} {...item}  />
                     ))
                 }
             </View>

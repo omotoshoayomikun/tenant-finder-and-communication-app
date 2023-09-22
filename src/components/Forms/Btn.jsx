@@ -1,4 +1,4 @@
-import { Pressable, View, Text, StyleSheet } from 'react-native'
+import { Pressable, View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import GlobalStyle from '../../utils/GlobalStyle'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -10,11 +10,18 @@ export const Btn = (props) => {
     return (
         <Pressable
             onPress={props.handlePress}
+            disabled={props.loading}
             style={({ pressed }) => [
                 { backgroundColor: pressed ? LightPurple : Purple, borderWidth: 2, borderColor: pressed ? LightPurple : Purple, }, styles.btn
             ]}
         >
-            <Text style={[styles.text, GlobalStyle.TextWhite]}>{props.text}</Text>
+            {
+                props.loading ? (
+                    <ActivityIndicator size="small" color="#ffffff" />
+                ) : (
+                    <Text style={[styles.text, GlobalStyle.TextWhite]}>{props.text}</Text>
+                )
+            }
         </Pressable>
     )
 }
@@ -24,7 +31,7 @@ export const OutBtn = (props) => {
         <Pressable
             onPress={props.handlePress}
             style={({ pressed }) => [
-                { backgroundColor: pressed ? LLightPurple : '#ffffff', borderWidth: 2, borderColor: Purple},
+                { backgroundColor: pressed ? LLightPurple : '#ffffff', borderWidth: 2, borderColor: Purple },
                 styles.btn
             ]}
         >

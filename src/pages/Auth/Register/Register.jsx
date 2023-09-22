@@ -1,25 +1,32 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native"
+import { View, Text, StyleSheet, Image, ScrollView, Alert } from "react-native"
 import { Input, SelectDropdown } from "../../../components/Forms/Input"
 import GlobalStyle from "../../../utils/GlobalStyle"
 import { BackBtn, Btn } from "../../../components/Forms/Btn"
+import axios from 'axios'
+import { Links, Url } from '../../../utils/url'
+import Model from '../../../components/Forms/Model'
 const { White, mb_20, mt_10, flex1, mt_30, textRight, red, headerText, textCenter, relative, px, flex_row, TextPurple } = GlobalStyle;
 
 function Register({ navigation }) {
 
 
+    const [modelDisplay, setModelDisplay] = useState(false)
     const [value, setValue] = useState({
         firstName: '',
         lastName: '',
         phone: '',
         email: '',
+        address: '',
         gender: 'Select Gender',
         state: 'Select State',
         category: 'Select Category',
         password: '',
-        confirmPassword: ''
-
+        confirmPassword: '',
+        image: '',
     })
+
+    const [loading, setLoading] = useState(false)
 
     const Inputs = [
         {
@@ -36,11 +43,13 @@ function Register({ navigation }) {
             id: 3,
             name: 'phone',
             placeholder: 'Phone Number',
+            keyboard: 'phone-pad',
         },
         {
             id: 4,
             name: 'email',
             placeholder: 'Email',
+            keyboard: 'email-address',
         },
         {
             id: 5,
@@ -64,6 +73,11 @@ function Register({ navigation }) {
         },
         {
             id: 7,
+            name: 'address',
+            placeholder: 'Address',
+        },
+        {
+            id: 8,
             name: 'category',
             placeholder: 'Select Category',
             data: [
@@ -72,13 +86,13 @@ function Register({ navigation }) {
             ]
         },
         {
-            id: 7,
+            id: 9,
             name: 'password',
             placeholder: 'password',
             secure: true,
         },
         {
-            id: 7,
+            id: 10,
             name: 'confirmPassword',
             placeholder: 'confirm password',
             secure: true,
@@ -94,11 +108,38 @@ function Register({ navigation }) {
     }
 
 
-    const handleLogin = () => {
+    const handleRegister = async () => {
+        setLoading(true)
+        // sending a post to the backend API to register user
+        axios.post(`${Links.onlineUrl}/register`, value)
+            .then((res) => {
+                console.log(res.data)
 
-        // if()
+                setValue({
+                    firstName: '',
+                    lastName: '',
+                    phone: '',
+                    email: '',
+                    gender: 'Select Gender',
+                    state: 'Select State',
+                    category: 'Select Category',
+                    password: '',
+                    confirmPassword: '',
+                    image: '',
+                })
+                setModelDisplay(true)
+                setLoading(false)
 
-        navigation.navigate('LayoutTabScreen')
+            }).catch((err) => {
+                setLoading(false)
+                Alert.alert('Error', `${err.message}`, [
+                    { text: 'OK' }
+                ])
+                console.log(err)
+            })
+        // setModelDisplay(true)
+
+        // navigation.navigate('LayoutTabScreen')
     }
 
 
@@ -127,19 +168,53 @@ function Register({ navigation }) {
                                 onChange={handleSelect}
                             />
                         </View>
-                    )).slice(4, 7)
+                    )).slice(4, 6)
                 }
                 {
                     Inputs.map((input, i) => (
                         <View key={i}>
                             <Input {...input} value={value[input.name]} onChangeText={onChangeText} />
                         </View>
-                    )).slice(7, 9)
+                    )).slice(6, 7)
+                }
+                {/* {
+                    Inputs.map((input, i) => (
+                        <View key={i}>
+                            <SelectDropdown
+                                {...input}
+                                value={value[input.name]}
+                                onChange={handleSelect}
+                            />
+                        </View>
+                    )).slice(7)
+                } */}
+                {
+                    Inputs.map((input, i) => (
+                        <View key={i}>
+                            <SelectDropdown
+                                {...input}
+                                value={value[input.name]}
+                                onChange={handleSelect}
+                            />
+                        </View>
+                    )).slice(7, 8)
+                }
+                  {
+                    Inputs.map((input, i) => (
+                        <View key={i}>
+                            <Input {...input} value={value[input.name]} onChangeText={onChangeText} />
+                        </View>
+                    )).slice(8)
                 }
                 <View style={[mt_30]}>
-                    <Btn text='Register' handlePress={handleLogin} />
+                    <Btn text='Register' handlePress={handleRegister} loading={loading} />
                 </View>
             </View>
+            {
+                modelDisplay && (
+                    <Model visible={modelDisplay} handlePressLogin={() => { navigation.navigate('Login'); setValue(false) }} />
+                )
+            }
         </ScrollView>
     )
 }

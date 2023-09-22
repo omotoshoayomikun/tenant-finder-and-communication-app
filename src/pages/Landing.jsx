@@ -1,43 +1,32 @@
+import React, { useEffect } from 'react'
 import {
     View,
     Text,
     StyleSheet,
-    Image,
-    StatusBar
 
 } from 'react-native'
-import { Input } from '../components/Forms/Input'
-import { Btn, OutBtn } from '../components/Forms/Btn'
 import GlobalStyle from '../utils/GlobalStyle'
-function Landing({ navigation }) {
+import { useNavigation } from '@react-navigation/native';
+function Landing() {
+    const navigation = useNavigation();
 
-    const { container, w_full, h_full, item_center, justify_around, TextBlack, mb_10 } = GlobalStyle
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            navigation.replace('Login')
+        }, 3000)
+
+        return () => clearTimeout(timer)
+    }, [])
+
+    const { flex1, w_full, h_full, item_center, justify_center, Raleway, TextPurple, TextBlack, mb_10 } = GlobalStyle
 
     return (
-        <View style={[container, justify_around, item_center]}>
-            {/* <StatusBar
-                backgroundColor="#701a75"
-            /> */}
-            {/* <View style={[styles.img_cont]}>
-                <Image
-                    source={require('../../assets/imgs/welcome.jpg')}
-                    style={[w_full, h_full]}
-                // resizeMode='cover'
-                />
-            </View> */}
+        <View style={[flex1, item_center, justify_center, { backgroundColor: '#ffffff' }]}>
             <View>
-                <Text style={[styles.text, TextBlack]}>Hello! Let's assist you.</Text>
+                <Text style={[Raleway, TextBlack, { fontSize: 25 }]}>Group 8</Text>
             </View>
             <View>
-                <Text style={[styles.text2, TextBlack]}>Choosing suicide is not the solution; please reach out to us so we can offer you assistance and support.</Text>
-            </View>
-            <View style={w_full}>
-                <View style={[mb_10]}>
-                    <Btn text='Login' handlePress={() => navigation.navigate('Login')} />
-                </View>
-                <View>
-                    <OutBtn text='Sign Up' handlePress={() => navigation.navigate('PersonalQues')} />
-                </View>
+                <Text style={[Raleway, TextBlack, { fontSize: 19 }]}>Tenant Fin<Text style={[TextPurple]}>der and Com</Text>munication</Text>
             </View>
         </View>
     )
