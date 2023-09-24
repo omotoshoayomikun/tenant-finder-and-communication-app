@@ -100,7 +100,12 @@ function Register({ navigation }) {
     ]
 
     const onChangeText = (e, name) => {
-        setValue({ ...value, [name]: e })
+        if(name === 'address') {
+            setValue({ ...value, [name]: e })
+        } else {
+            setValue({ ...value, [name]: e.trim() })
+            
+        }
     }
 
     const handleSelect = (e, name) => {
@@ -109,34 +114,32 @@ function Register({ navigation }) {
 
 
     const handleRegister = async () => {
+        console.log('Clicked')
         setLoading(true)
         // sending a post to the backend API to register user
-        axios.post(`${Links.onlineUrl}/register`, value)
-            .then((res) => {
-                console.log(res.data)
-
-                setValue({
-                    firstName: '',
-                    lastName: '',
-                    phone: '',
-                    email: '',
-                    gender: 'Select Gender',
-                    state: 'Select State',
-                    category: 'Select Category',
-                    password: '',
-                    confirmPassword: '',
-                    image: '',
-                })
-                setModelDisplay(true)
-                setLoading(false)
-
-            }).catch((err) => {
-                setLoading(false)
-                Alert.alert('Error', `${err.message}`, [
-                    { text: 'OK' }
-                ])
-                console.log(err)
+        try {
+            const response = await axios.post(`${Links.baseUrl}/register`, value)
+            setValue({
+                firstName: '',
+                lastName: '',
+                phone: '',
+                email: '',
+                gender: 'Select Gender',
+                state: 'Select State',
+                category: 'Select Category',
+                password: '',
+                confirmPassword: '',
             })
+            setLoading(false)
+            setModelDisplay(true)
+
+        } catch (err) {
+            setLoading(false)
+            Alert.alert('Error', `${err.message}`, [
+                { text: 'OK' }
+            ])
+            console.log(err)
+        }
         // setModelDisplay(true)
 
         // navigation.navigate('LayoutTabScreen')
@@ -199,7 +202,7 @@ function Register({ navigation }) {
                         </View>
                     )).slice(7, 8)
                 }
-                  {
+                {
                     Inputs.map((input, i) => (
                         <View key={i}>
                             <Input {...input} value={value[input.name]} onChangeText={onChangeText} />

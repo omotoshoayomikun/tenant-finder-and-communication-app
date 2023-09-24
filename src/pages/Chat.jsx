@@ -1,14 +1,17 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, ScrollView, Pressable, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import GlobalStyle from '../utils/GlobalStyle';
+import axios from 'axios';
+import { Links } from '../utils/url';
+import { UserType } from '../userContext';
 
+const { Raleway } = GlobalStyle
 export default function Chat() {
-    const { Raleway } = GlobalStyle
-    
     const navigation = useNavigation()
-
+    const { userId } = useContext(UserType)
+    const [friends, setFriends] = useState([])
     useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: () => (
@@ -17,8 +20,20 @@ export default function Chat() {
         })
     }, [])
 
+    // useEffect(() => {
+    //     const fetchFriends = async () => {
+    //         try {
+    //             const response = await axios.get(`${Links.baseUrl}/friends/${userId}`)
+    //             setFriends(response.data)
+    //         } catch (err) {
+    //             console.log(err)
+    //         }
+    //     }
+    //     fetchFriends()
+    // }, [navigation])
+
     const handleChat = () => {
-        navigation.navigate('ChatMessages')
+        navigation.navigate('ChatMessages', {})
     }
 
     return (

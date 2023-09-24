@@ -11,7 +11,7 @@ import Swiper from 'react-native-swiper';
 const { flex_row, flex1, justify_between, Roboto, item_center, ml_10, mb_10, mt_10, mt_20, Raleway, gap10, relative, absolute } = GlobalStyle
 
 export const Card = (props) => {
-    
+
     return (
         <View style={styles.card}>
             <View style={[flex_row, styles.card_hed]}>
@@ -67,16 +67,19 @@ export const Card = (props) => {
                 <Text style={[Raleway, { fontSize: 12 }]}>{props.item.location} {props.item.state}</Text>
             </View>
             <View style={[flex_row, gap10, mt_20, mb_10]}>
-                <TouchableOpacity
+                <Pressable
                     onPress={() => props.handleShow(props.item._id)}
                     style={styles.btn_view}
                 >
                     <Text style={[Raleway, { fontSize: 15 }]}>View Details</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn_view}>
+                </Pressable>
+                <Pressable
+                    style={styles.btn_view}
+                    onPress={() => props.handleChat(props.item.userId._id)}
+                >
                     <AntDesign name='message1' size={20} />
                     <Text style={[{ fontSize: 6 }]}>Chat</Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
         </View>
     )

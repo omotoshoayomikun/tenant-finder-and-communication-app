@@ -32,7 +32,7 @@ function Profile({ navigation }) {
 
     }
     fetchUser()
-  }, [navigation])
+  })
 
   
   if(pageLoading) {
