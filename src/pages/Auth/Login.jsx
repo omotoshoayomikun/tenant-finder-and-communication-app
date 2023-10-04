@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView, Pressable, Alert } from "react-native"
+import { View, Text, StyleSheet, Image, ScrollView, Pressable, Alert, KeyboardAvoidingView, TextInput } from "react-native"
 import { Input } from "../../components/Forms/Input"
 import GlobalStyle from "../../utils/GlobalStyle"
 import { Btn } from "../../components/Forms/Btn"
@@ -50,17 +50,17 @@ function Login({ navigation }) {
     // }, [])
 
     const onChangeText = (e, name) => {
-        setValue({ ...value, [name]: e.trim()})
+        setValue({ ...value, [name]: e.trim() })
     }
 
     const handleEyeclose = () => {
         setSecure(!secure)
     }
-    
+
     const handleLogin = () => {
         setLoading(true)
 
-         axios.post(`${Links.baseUrl}/login`, value).then((response) => {
+        axios.post(`${Links.baseUrl}/login`, value).then((response) => {
             const token = response.data.token;
 
             AsyncStorage.setItem("authToken", token);
@@ -78,15 +78,17 @@ function Login({ navigation }) {
     }
 
     return (
-        <ScrollView style={[flex1, relative]}>
+        <ScrollView
+            // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={[flex1]}>
             <Image
                 style={styles.img}
                 source={require('../../../assets/imgs/welcome1.jpg')}
             />
             <View style={[flex1, px, styles.box_login]}>
                 <Text style={[headerText, textCenter, mb_20]}>Login</Text>
-                <Input placeholder='Email' name='email' onChangeText={onChangeText} />
-                <Input placeholder='Password' name='password' secure={secure} onChangeText={onChangeText} handleEyeclose={handleEyeclose} />
+                <Input placeholder='Email' name='email' value={value.email} onChangeText={onChangeText} />
+                <Input placeholder='Password' name='password' value={value.password} secure={secure} onChangeText={onChangeText} />
                 <View style={[mt_50]}>
                     <Btn text='Login' handlePress={handleLogin} loading={loading} />
                 </View>

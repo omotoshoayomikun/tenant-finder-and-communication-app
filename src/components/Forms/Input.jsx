@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { StyleSheet, TextInput, View, Text, Pressable } from "react-native"
 import GlobalStyle from "../../utils/GlobalStyle"
-import Feather from 'react-native-vector-icons/Feather'
 import { Dropdown } from "react-native-element-dropdown"
 
 export const Input = (props) => {
@@ -9,37 +8,16 @@ export const Input = (props) => {
 
 
     return (
-        <View style={[styles.container, relative]}>
+        // <View style={[styles.container, relative]}>
             <TextInput
-                // onChangeText={(value) => props.onChangeText(value)}
                 placeholder={props.placeholder}
                 style={[styles.input, { borderColor: props.error ? 'red' : '#0E0E240D' }]}
+                value={props.value}
                 secureTextEntry={props.secure === true ? true : false}
                 onChangeText={(value) => props.onChangeText(value, props.name)}
                 keyboardType={props.keyboard ? `${props.keyboard}` : 'default'}
             />
-            {
-                props.name === 'password' && (
-                    <Pressable style={[styles.secure_icon]} onPress={() => props.handleEyeclose()}>
-                        <Feather name={props.secure ? 'eye-off' : 'eye'} size={22} />
-                    </Pressable>
-                )
-            }
-            {/* {
-                props.name === 'confirmPassword' && (
-                    <Pressable style={[styles.secure_icon]} onPress={() => props.handleEyeclose()}>
-                        <Feather name={props.secure ? 'eye-off' : 'eye'} size={22} />
-                    </Pressable>
-                )
-            }
-            {
-                props.name === 'email' && (
-                    <Pressable style={[styles.secure_icon]}>
-                        <Feather name='mail' size={22} />
-                    </Pressable>
-                )
-            } */}
-        </View>
+        // </View>
     )
 }
 
@@ -50,7 +28,7 @@ export const LineInput = (props) => {
             <Text style={[{ fontSize: 12, paddingVertical: 0 }]}>{props.placeholder}</Text>
             <TextInput
                 // onChangeText={(value) => props.onChangeText(value)}
-                // placeholder={props.placeholder}
+                placeholder={props.placeholder}
                 style={[styles.line_input, { color: props.editable === false ? '#000000' : '#000000' }]}
                 secureTextEntry={props.secure === true ? true : false}
                 onChangeText={(value) => props.onChangeText(value, props.name)}

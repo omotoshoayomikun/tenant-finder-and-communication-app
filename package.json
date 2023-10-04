@@ -12,11 +12,11 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/cli-doctor": "^11.3.7",
-    "@react-navigation/bottom-tabs": "^6.5.8",
+    "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/drawer": "^6.6.3",
     "@react-navigation/material-top-tabs": "^6.6.3",
-    "@react-navigation/native": "^6.1.7",
-    "@react-navigation/stack": "^6.3.17",
+    "@react-navigation/native": "^6.1.8",
+    "@react-navigation/stack": "^6.3.18",
     "axios": "^1.5.0",
     "jwt-decode": "^3.1.2",
     "mongoose": "^7.5.2",
@@ -24,7 +24,7 @@
     "react-native": "0.72.4",
     "react-native-element-dropdown": "^2.10.0",
     "react-native-emoji-selector": "^0.2.0",
-    "react-native-gesture-handler": "^2.12.1",
+    "react-native-gesture-handler": "^2.13.1",
     "react-native-image-picker": "^7.0.0",
     "react-native-modal-dropdown": "^1.0.2",
     "react-native-pager-view": "^6.2.1",
@@ -32,7 +32,8 @@
     "react-native-screens": "^3.25.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
-    "react-native-vector-icons": "^10.0.0"
+    "react-native-vector-icons": "^10.0.0",
+    "react-native-webview": "^13.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

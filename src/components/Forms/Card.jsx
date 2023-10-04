@@ -103,7 +103,7 @@ export const BoxCard = (props) => {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-        padding: 5,
+        // padding: 5,
         // borderRadius: 20,
         // shadowColor: '#555',
         // shadowOffset: { width: 2, height: 2 },

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import {
     View,
     Text,
-    StyleSheet,
 
 } from 'react-native'
 import GlobalStyle from '../utils/GlobalStyle'
@@ -15,6 +14,7 @@ function Landing() {
             navigation.replace('Login')
         }, 3000)
 
+        // return clearTimeout(timer)
 
     }, [])
 
@@ -52,23 +52,5 @@ function Landing() {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    img_cont: {
-        width: '100%',
-        height: 150,
-        // padding: 10,
-    },
-    text: {
-        fontFamily: 'Raleway',
-        fontSize: 24,
-        fontWeight: '600'
-    },
-    text2: {
-        fontSize: 16,
-        textAlign: 'center',
-        fontFamily: 'Raleway',
-    }
-})
 
 export default Landing
